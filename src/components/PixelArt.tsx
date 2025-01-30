@@ -19,6 +19,7 @@ const PixelArt: React.FC<PixelArtProps> = ({
   height = 180
 }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const [error, setError] = React.useState(false);
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,21 +30,30 @@ const PixelArt: React.FC<PixelArtProps> = ({
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = src;
 
     img.onload = () => {
-      // Set canvas size to match desired dimensions
+      // Calculate aspect ratio preserving dimensions
+      const scale = Math.min(width / img.width, height / img.height);
+      const scaledWidth = Math.round(img.width * scale);
+      const scaledHeight = Math.round(img.height * scale);
+      const x = (width - scaledWidth) / 2;
+      const y = (height - scaledHeight) / 2;
+
+      // Set canvas size
       canvas.width = width;
       canvas.height = height;
 
-      // Draw original image
-      ctx.drawImage(img, 0, 0, width, height);
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw original image centered
+      ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
 
       // Get image data
       const imageData = ctx.getImageData(0, 0, width, height);
       const data = imageData.data;
 
-      // Clear canvas
+      // Clear canvas again
       ctx.clearRect(0, 0, width, height);
 
       // Draw pixelated version
@@ -56,13 +66,30 @@ const PixelArt: React.FC<PixelArtProps> = ({
           const b = data[pixelIndex + 2];
           const a = data[pixelIndex + 3];
 
-          // Draw a rectangle for each pixel block
-          ctx.fillStyle = `rgba(${r},${g},${b},${a / 255})`;
-          ctx.fillRect(x, y, pixelSize, pixelSize);
+          if (a > 0) { // Only draw non-transparent pixels
+            ctx.fillStyle = `rgba(${r},${g},${b},${a / 255})`;
+            ctx.fillRect(x, y, pixelSize, pixelSize);
+          }
         }
       }
     };
+
+    img.onerror = () => {
+      setError(true);
+      console.error('Error loading image:', src);
+    };
+
+    img.src = src;
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
   }, [src, pixelSize, width, height]);
+
+  if (error) {
+    return <div className={styles.container} aria-label={`Error loading ${alt}`} />;
+  }
 
   return (
     <div className={styles.container}>

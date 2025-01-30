@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: center;
   background: transparent;
+  overflow: hidden;
 }
 
 .canvas {
@@ -15,4 +16,5 @@
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   background: transparent;
+  display: block;
 } 
