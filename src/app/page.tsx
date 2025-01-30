@@ -5,7 +5,7 @@ import styles from '@components/page/root.module.scss';
 import DefaultLayout from '@components/page/DefaultLayout';
 import LeagueSelector from '@components/LeagueSelector';
 import CommandPalette from '@components/CommandPalette';
-import PixelArt from '@components/PixelArt';
+import PixelHero from '@components/PixelHero';
 import { HotkeysProvider } from '@modules/hotkeys/hotkeys-provider';
 
 const FOOTBALL_IMAGES = [
@@ -32,21 +32,12 @@ const FOOTBALL_IMAGES = [
   {
     src: '/images/hero/nl.jpeg',
     alt: 'netherlands total football'
-  },
+  }
 ];
 
 export default function Home() {
   const [isCmdkOpen, setIsCmdkOpen] = React.useState(false);
   const [selectedLeague, setSelectedLeague] = React.useState<string | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % FOOTBALL_IMAGES.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -68,24 +59,7 @@ export default function Home() {
     <HotkeysProvider>
       <DefaultLayout previewPixelSRC="/app-icon.png">
         <div className={styles.content}>
-          <div className='w-[600px] h-[337.5px] overflow-hidden'>
-            {FOOTBALL_IMAGES.map((image, index) => (
-              <div
-                key={image.src}
-                style={{
-                  display: index === currentImageIndex ? 'block' : 'none',
-                  width: '600px',
-                  height: '337.5px'
-                }}
-              >
-                <PixelArt
-                  src={image.src}
-                  alt={image.alt}
-                  pixelSize={8}
-                />
-              </div>
-            ))}
-          </div>
+          <PixelHero images={FOOTBALL_IMAGES} pixelSize={8} />
 
           <div className={styles.selectorSection}>
             <LeagueSelector onSelectLeague={handleLeagueSelect} />

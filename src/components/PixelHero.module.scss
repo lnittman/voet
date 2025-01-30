@@ -1,0 +1,30 @@
+.container {
+  width: 100vw;
+  height: var(--hero-height);
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  background: var(--theme-background);
+  margin-right: calc(var(--scrollbar-width, 0px) * -1);
+  
+  // Hide scrollbar but keep functionality
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // Smooth scrolling
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.canvas {
+  display: block;
+  height: 100%;
+  min-width: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: var(--theme-background);
+  will-change: transform;
+} 
