@@ -7,15 +7,15 @@ import * as Utilities from '@common/utilities';
 
 import ActionButton from '@components/ActionButton';
 import DropdownMenuTrigger from '@components/DropdownMenuTrigger';
-import { useHotkeys } from '@modules/hotkeys';
+import useHotkeys from '@modules/hotkeys/use-hotkeys';
 
-export interface ButtonGroupItem {
-  hotkey?: string;
+interface ButtonGroupItem {
+  body: string;
   onClick?: () => void;
-  openHotkey?: string;
   selected?: boolean;
-  body: React.ReactNode;
-  items?: any[];
+  items?: ButtonGroupItem[];
+  hotkey?: string;
+  openHotkey?: string;
 }
 
 interface ButtonGroupProps {
@@ -56,7 +56,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ items, isFull }) => {
         
         if (each.items) {
           return (
-            <DropdownMenuTrigger key={`dropdown-${index}`} items={each.items} hotkey={each.openHotkey}>
+            <DropdownMenuTrigger key={each.body} items={each.items} hotkey={each.openHotkey}>
               <ActionButton hotkey={shortcut} isSelected={each.selected}>
                 {each.body}
               </ActionButton>
@@ -66,7 +66,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ items, isFull }) => {
 
         return (
           <ActionButton 
-            key={`button-${index}`}
+            key={each.body} 
             onClick={each.onClick} 
             hotkey={shortcut}
             isSelected={each.selected}
