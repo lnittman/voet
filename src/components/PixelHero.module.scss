@@ -1,11 +1,15 @@
 .container {
+  position: fixed;
+  top: 4rem; // Match header height
+  left: 0;
+  right: 0;
   width: 100vw;
   height: var(--hero-height);
   overflow-x: auto;
   overflow-y: hidden;
-  position: relative;
   background: var(--theme-background);
-  margin-right: calc(var(--scrollbar-width, 0px) * -1);
+  margin: 0;
+  padding: 0;
   
   // Hide scrollbar but keep functionality
   scrollbar-width: none;
@@ -17,6 +21,17 @@
   // Smooth scrolling
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+
+  // Ensure content is above background but below other UI
+  z-index: 1;
+}
+
+// Spacer to prevent content from jumping when container becomes fixed
+.spacer {
+  width: 100%;
+  height: var(--hero-height);
+  margin: 0;
+  padding: 0;
 }
 
 .canvas {
@@ -27,4 +42,5 @@
   image-rendering: crisp-edges;
   background: var(--theme-background);
   will-change: transform;
+  transform: translateZ(0);
 } 

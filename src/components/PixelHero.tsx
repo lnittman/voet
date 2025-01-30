@@ -15,6 +15,7 @@ const PixelHero: React.FC<PixelHeroProps> = ({
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [scrollPosition, setScrollPosition] = React.useState(0);
+  const [totalWidth, setTotalWidth] = React.useState(0);
 
   const height = 240; // Fixed height for all images
 
@@ -25,8 +26,7 @@ const PixelHero: React.FC<PixelHeroProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Calculate total width needed based on aspect ratios
-    let totalWidth = 0;
+    // First pass: load images and calculate base widths
     const imagePromises = images.map(async (image) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
@@ -36,36 +36,46 @@ const PixelHero: React.FC<PixelHeroProps> = ({
         img.src = image.src;
       });
       const aspectRatio = img.width / img.height;
-      const width = Math.round(height * aspectRatio);
-      totalWidth += width;
-      return { img, width };
+      const baseWidth = Math.round(height * aspectRatio);
+      return { img, baseWidth, aspectRatio };
     });
 
-    // Load all images and get their dimensions
     const loadedImages = await Promise.all(imagePromises);
-
+    const baseWidth = loadedImages.reduce((sum, { baseWidth }) => sum + baseWidth, 0);
+    
+    // Calculate scale factor to ensure minimum width
+    const minWidth = window.innerWidth;
+    const scale = Math.max(1, minWidth / baseWidth);
+    const actualWidth = Math.max(baseWidth, minWidth);
+    
     // Set canvas size
-    canvas.width = Math.max(totalWidth, window.innerWidth);
+    canvas.width = actualWidth;
     canvas.height = height;
+    setTotalWidth(actualWidth);
 
     // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, height);
+    ctx.clearRect(0, 0, actualWidth, height);
 
     // Draw images sequentially without gaps
     let currentX = 0;
-    loadedImages.forEach(({ img, width }) => {
-      ctx.drawImage(img, currentX, 0, width, height);
-      currentX += width;
+    loadedImages.forEach(({ img, baseWidth, aspectRatio }) => {
+      const scaledWidth = Math.round(baseWidth * scale);
+      const scaledHeight = height;
+      ctx.drawImage(img, currentX, 0, scaledWidth, scaledHeight);
+      currentX += scaledWidth;
     });
 
     // Apply pixelation effect
-    const imageData = ctx.getImageData(0, 0, canvas.width, height);
+    const imageData = ctx.getImageData(0, 0, actualWidth, height);
     const data = imageData.data;
-    ctx.clearRect(0, 0, canvas.width, height);
+    ctx.clearRect(0, 0, actualWidth, height);
 
-    for (let y = 0; y < height; y += pixelSize) {
-      for (let x = 0; x < canvas.width; x += pixelSize) {
-        const i = (y * canvas.width + x) * 4;
+    // Scale pixel size with viewport
+    const adjustedPixelSize = Math.max(pixelSize, Math.floor(scale * pixelSize));
+
+    for (let y = 0; y < height; y += adjustedPixelSize) {
+      for (let x = 0; x < actualWidth; x += adjustedPixelSize) {
+        const i = (y * actualWidth + x) * 4;
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
@@ -76,8 +86,8 @@ const PixelHero: React.FC<PixelHeroProps> = ({
           ctx.fillRect(
             Math.round(x),
             Math.round(y),
-            pixelSize,
-            pixelSize
+            adjustedPixelSize,
+            adjustedPixelSize
           );
         }
       }
@@ -86,13 +96,35 @@ const PixelHero: React.FC<PixelHeroProps> = ({
 
   // Handle window resize
   React.useEffect(() => {
+    let resizeTimeout: NodeJS.Timeout;
     const handleResize = () => {
-      drawImages();
+      // Debounce resize events
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const container = containerRef.current;
+        if (!container) return;
+        
+        // Calculate scroll percentage before resize
+        const scrollPercentage = container.scrollLeft / (totalWidth - container.clientWidth);
+        
+        // Redraw images
+        drawImages().then(() => {
+          // Restore scroll position by percentage
+          if (container && totalWidth > container.clientWidth) {
+            const newScrollLeft = scrollPercentage * (totalWidth - container.clientWidth);
+            container.scrollLeft = newScrollLeft;
+            setScrollPosition(newScrollLeft);
+          }
+        });
+      }, 100);
     };
 
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [drawImages]);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, [drawImages, totalWidth]);
 
   // Initial draw
   React.useEffect(() => {
@@ -113,20 +145,23 @@ const PixelHero: React.FC<PixelHeroProps> = ({
   }, []);
 
   return (
-    <div 
-      ref={containerRef} 
-      className={styles.container}
-      style={{
-        '--scroll-position': `${scrollPosition}px`,
-        '--hero-height': `${height}px`
-      } as React.CSSProperties}
-    >
-      <canvas
-        ref={canvasRef}
-        className={styles.canvas}
-        height={height}
-      />
-    </div>
+    <>
+      <div className={styles.spacer} />
+      <div 
+        ref={containerRef} 
+        className={styles.container}
+        style={{
+          '--scroll-position': `${scrollPosition}px`,
+          '--hero-height': `${height}px`
+        } as React.CSSProperties}
+      >
+        <canvas
+          ref={canvasRef}
+          className={styles.canvas}
+          height={height}
+        />
+      </div>
+    </>
   );
 };
 
