@@ -7,15 +7,15 @@ import * as Utilities from '@common/utilities';
 
 import ActionButton from '@components/ActionButton';
 import DropdownMenuTrigger from '@components/DropdownMenuTrigger';
-import useHotkeys from '@modules/hotkeys/use-hotkeys';
+import { useHotkeys } from '@modules/hotkeys';
 
-interface ButtonGroupItem {
-  body: string;
-  onClick?: () => void;
-  selected?: boolean;
-  items?: ButtonGroupItem[];
+export interface ButtonGroupItem {
   hotkey?: string;
+  onClick?: () => void;
   openHotkey?: string;
+  selected?: boolean;
+  body: React.ReactNode;
+  items?: any[];
 }
 
 interface ButtonGroupProps {
