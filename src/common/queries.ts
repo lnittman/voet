@@ -1,13 +1,23 @@
 import * as Constants from '@common/constants';
 import * as Utilities from '@common/utilities';
+import * as React from 'react';
 
-export async function getData({ route, key, body }, qualifier = 'data') {
+interface QueryParams {
+  route: string;
+  key?: string;
+  body?: Record<string, unknown>;
+}
+
+export async function getData({ route, key, body }: QueryParams, qualifier = 'data') {
   let result;
   try {
     const response = await fetch(route, {
-      method: 'POST',
-      headers: { 'X-API-KEY': key, 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      method: body ? 'POST' : 'GET',
+      headers: {
+        ...(key ? { 'X-API-KEY': key } : {}),
+        'Content-Type': 'application/json',
+      },
+      body: body ? JSON.stringify(body) : undefined,
     });
     result = await response.json();
   } catch (e) {
