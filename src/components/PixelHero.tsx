@@ -97,6 +97,8 @@ const PixelHero: React.FC<PixelHeroProps> = ({
   // Handle window resize
   React.useEffect(() => {
     let resizeTimeout: NodeJS.Timeout;
+    let lastWidth = window.innerWidth;
+
     const handleResize = () => {
       // Debounce resize events
       clearTimeout(resizeTimeout);
@@ -104,18 +106,24 @@ const PixelHero: React.FC<PixelHeroProps> = ({
         const container = containerRef.current;
         if (!container) return;
         
-        // Calculate scroll percentage before resize
-        const scrollPercentage = container.scrollLeft / (totalWidth - container.clientWidth);
-        
-        // Redraw images
-        drawImages().then(() => {
-          // Restore scroll position by percentage
-          if (container && totalWidth > container.clientWidth) {
-            const newScrollLeft = scrollPercentage * (totalWidth - container.clientWidth);
-            container.scrollLeft = newScrollLeft;
-            setScrollPosition(newScrollLeft);
-          }
-        });
+        const newWidth = window.innerWidth;
+        const isWidthChange = newWidth !== lastWidth;
+        lastWidth = newWidth;
+
+        if (isWidthChange) {
+          // Calculate scroll percentage before resize
+          const scrollPercentage = container.scrollLeft / (totalWidth - container.clientWidth);
+          
+          // Redraw images
+          drawImages().then(() => {
+            // Restore scroll position by percentage
+            if (container && totalWidth > container.clientWidth) {
+              const newScrollLeft = scrollPercentage * (totalWidth - container.clientWidth);
+              container.scrollLeft = newScrollLeft;
+              setScrollPosition(newScrollLeft);
+            }
+          });
+        }
       }, 100);
     };
 

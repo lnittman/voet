@@ -59,8 +59,9 @@ export default function Home() {
     <HotkeysProvider>
       <DefaultLayout previewPixelSRC="/app-icon.png">
         <div className={styles.content}>
-          <PixelHero images={FOOTBALL_IMAGES} pixelSize={8} />
-
+          <div className={styles.heroContainer}>
+            <PixelHero images={FOOTBALL_IMAGES} pixelSize={8} />
+          </div>
           <div className={styles.selectorSection}>
             <LeagueSelector onSelectLeague={handleLeagueSelect} />
           </div>

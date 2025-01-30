@@ -1,3 +1,7 @@
+// Common padding values
+$page-padding: 1rem;
+$header-height: 4rem;
+
 .container {
   min-height: 100vh;
   display: flex;
@@ -7,25 +11,26 @@
 }
 
 .main {
-  flex: 1;
-  padding: 5rem 2rem 2rem;
-  width: 100%;
+  margin-top: var(--header-height);
+  padding: 0;
+  min-height: 100vh;
+  background: var(--theme-background);
   position: relative;
+  overflow-x: hidden;
 }
 
 .header {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: center;
-  padding: 1rem 2rem;
-  font-family: var(--font-mono);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
+  height: var(--header-height);
+  padding: 0 $page-padding;
   background: var(--theme-background);
-  z-index: 150;
-  height: 4rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .headerLeft {
@@ -81,11 +86,18 @@
 .content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 4rem 0 2rem;
+  align-items: flex-start;
   width: 100%;
   position: relative;
+  padding-top: $header-height;
+}
+
+.heroContainer {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .hero {
@@ -114,9 +126,13 @@
 
 .selectorSection {
   width: 100%;
-  max-width: 600px;
-  margin: 2rem auto 0;
-  padding: 0 2rem;
+  padding: $page-padding;
+  position: relative;
+  z-index: 2;
+  background: var(--theme-background);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .mainContent {
@@ -275,5 +291,9 @@
   .footerLinks {
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .selectorSection {
+    padding: $page-padding;
   }
 } 
