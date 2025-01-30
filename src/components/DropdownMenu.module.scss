@@ -17,10 +17,13 @@
 
 .footer {
   background: var(--theme-background-modal-footer);
-  padding: calc(var(--font-size) * 0.5 * var(--theme-line-height-base)) 1ch calc(var(--font-size) * 0.5 * var(--theme-line-height-base)) 1ch;
+  padding: calc(var(--font-size) * 0.5 * var(--theme-line-height-base)) 1ch
+    calc(var(--font-size) * 0.5 * var(--theme-line-height-base)) 1ch;
   border-top: 1px solid var(--theme-border-subtle);
 }
 
-:global(.action-list-item[data-active="true"]) {
-  background: var(--theme-background-hover);
+.actionListItem {
+  &:global([data-active="true"]) {
+    background: var(--theme-background-hover);
+  }
 }
