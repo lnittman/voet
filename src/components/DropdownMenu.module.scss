@@ -1,0 +1,26 @@
+.root {
+  display: block;
+  background: var(--theme-border);
+  font-weight: 400;
+  position: relative;
+}
+
+.submenu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  min-width: 150px;
+  border-left: 1px solid var(--theme-border-subtle);
+  background: var(--theme-background);
+  box-shadow: var(--theme-shadow-small);
+}
+
+.footer {
+  background: var(--theme-background-modal-footer);
+  padding: calc(var(--font-size) * 0.5 * var(--theme-line-height-base)) 1ch calc(var(--font-size) * 0.5 * var(--theme-line-height-base)) 1ch;
+  border-top: 1px solid var(--theme-border-subtle);
+}
+
+:global(.action-list-item[data-active="true"]) {
+  background: var(--theme-background-hover);
+}

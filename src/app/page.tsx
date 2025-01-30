@@ -1,101 +1,219 @@
-import Image from "next/image";
+'use client';
+
+import * as React from 'react';
+import styles from '@components/page/root.module.scss';
+import Link from 'next/link';
+
+import DefaultLayout from '@components/page/DefaultLayout';
+import LeagueSelector from '@components/LeagueSelector';
+import BreadCrumbs from '@components/BreadCrumbs';
+import CommandPalette from '@components/CommandPalette';
+import PixelArt from '@components/PixelArt';
+import ActionListItem from '@components/ActionListItem';
+import DropdownMenu from '@components/DropdownMenu';
+import useHotkeys from '@modules/hotkeys/use-hotkeys';
+import { HotkeysProvider } from '@modules/hotkeys/hotkeys-provider';
+import { useTheme } from '@components/ThemeProvider';
+
+const FOOTBALL_IMAGES = [
+  {
+    src: '/images/hero/henry.jpeg',
+    alt: 'thierry henry iconic celebration'
+  },
+  {
+    src: '/images/hero/messi.jpeg',
+    alt: 'lionel messi iconic dribble'
+  },
+  {
+    src: '/images/hero/zidane.jpeg',
+    alt: 'zinedine zidane masterclass'
+  },
+  {
+    src: '/images/hero/brazil.jpg',
+    alt: 'brazil iconic celebration'
+  },
+  {
+    src: '/images/hero/alonso.jpeg',
+    alt: 'xabi alonso midfield control'
+  },
+  {
+    src: '/images/hero/nl.jpeg',
+    alt: 'netherlands total football'
+  }
+];
+
+const MENU_ITEMS = [
+  { icon: '⊹', children: 'docs', href: '#' },
+  { icon: '⊹', children: 'api', href: '#' },
+  { icon: '⊹', children: 'github', href: '#' },
+  { icon: '⊹', children: 'support', href: '#' },
+  { 
+    icon: '⊹', 
+    children: 'theme',
+    submenu: [
+      { icon: '⊹', children: 'light' },
+      { icon: '⊹', children: 'dark' },
+      { icon: '⊹', children: 'grass' },
+      { icon: '⊹', children: 'dusk' },
+      { icon: '⊹', children: 'solarized' },
+      { icon: '⊹', children: 'ocean' },
+      { icon: '⊹', children: 'sepia' },
+      { icon: '⊹', children: 'nord' }
+    ]
+  }
+];
+
+interface League {
+  name: string;
+  country: string;
+}
+
+const LEAGUES: Record<string, League> = {
+  'eng.1': { name: 'premier league', country: 'england' },
+  'esp.1': { name: 'la liga', country: 'spain' },
+  'ger.1': { name: 'bundesliga', country: 'germany' },
+  'ita.1': { name: 'serie a', country: 'italy' },
+  'fra.1': { name: 'ligue 1', country: 'france' },
+};
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isCmdkOpen, setIsCmdkOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [selectedLeague, setSelectedLeague] = React.useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+  const { setTheme } = useTheme();
+  const [activeSubmenu, setActiveSubmenu] = React.useState<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % FOOTBALL_IMAGES.length);
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsCmdkOpen(open => !open);
+      }
+    };
+
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, []);
+
+  const handleLeagueSelect = (leagueId: string) => {
+    setSelectedLeague(leagueId);
+  };
+
+  const breadcrumbItems = [
+    { name: 'home', url: '/' },
+    ...(selectedLeague && LEAGUES[selectedLeague] 
+      ? [{ name: LEAGUES[selectedLeague].name, url: `/league/${selectedLeague}` }] 
+      : []),
+  ];
+
+  // Add hotkey for closing menu with space
+  useHotkeys('space', (e) => {
+    e.preventDefault();
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  }, { enabled: isMenuOpen });
+
+  const handleMenuItemClick = (item: any) => {
+    if (item.submenu) {
+      setActiveSubmenu(activeSubmenu === item.children ? null : item.children);
+    } else if (activeSubmenu === 'theme') {
+      setTheme(item.children as 'light' | 'dark' | 'solarized' | 'grass');
+      setActiveSubmenu(null);
+      setIsMenuOpen(false);
+    }
+  };
+
+  const getMenuItems = () => {
+    if (activeSubmenu === 'theme') {
+      return MENU_ITEMS.find(item => item.children === 'theme')?.submenu || [];
+    }
+    return MENU_ITEMS;
+  };
+
+  return (
+    <HotkeysProvider>
+      <DefaultLayout previewPixelSRC="/app-icon.png">
+        <div className={styles.header}>
+          <div className={styles.headerLeft}>
+            <Link href="/" className={styles.logo}>voet</Link>
+          </div>
+          <div className={styles.headerCenter}>
+            <BreadCrumbs items={breadcrumbItems} />
+          </div>
+          <div className={styles.headerRight}>
+            <span className={styles.command} onClick={() => setIsCmdkOpen(true)}>command</span>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+
+        <div className={styles.content}>
+          <div className={styles.mainContent}>
+            <div className={styles.leftContent}>
+              <LeagueSelector onSelectLeague={handleLeagueSelect} />
+            </div>
+            <div className={styles.rightContent}>
+              {FOOTBALL_IMAGES.map((image, index) => (
+                <div
+                  key={image.src}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    display: index === currentImageIndex ? 'block' : 'none'
+                  }}
+                >
+                  <PixelArt
+                    src={image.src}
+                    alt={image.alt}
+                    pixelSize={6}
+                    width={480}
+                    height={270}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.menuContainer}>
+            {!isMenuOpen && (
+              <ActionListItem 
+                icon="⊹" 
+                onClick={() => setIsMenuOpen(true)}
+              >
+                menu
+              </ActionListItem>
+            )}
+            {isMenuOpen && (
+              <DropdownMenu
+                items={getMenuItems()}
+                onClose={() => {
+                  setIsMenuOpen(false);
+                  setActiveSubmenu(null);
+                }}
+                onItemClick={handleMenuItemClick}
+              />
+            )}
+          </div>
+        </div>
+
+        {isCmdkOpen && (
+          <CommandPalette
+            isOpen={isCmdkOpen}
+            onClose={() => setIsCmdkOpen(false)}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        )}
+      </DefaultLayout>
+    </HotkeysProvider>
   );
 }

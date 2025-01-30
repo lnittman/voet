@@ -1,0 +1,252 @@
+// Base colors
+:root {
+  // Black & White
+  --color-black-100: rgba(0, 0, 0, 1);
+  --color-black-100-4: rgba(0, 0, 0, 0.4);
+  --color-white: rgba(255, 255, 255, 1);
+  --color-white-1: rgba(255, 255, 255, 0.1);
+  --color-white-2: rgba(255, 255, 255, 0.2);
+  --color-white-4: rgba(255, 255, 255, 0.4);
+
+  // Grays
+  --color-gray-10: rgba(245, 245, 245, 1);
+  --color-gray-20: rgba(229, 229, 229, 1);
+  --color-gray-30: rgba(212, 212, 212, 1);
+  --color-gray-40: rgba(163, 163, 163, 1);
+  --color-gray-40-2: rgba(163, 163, 163, 0.2);
+  --color-gray-60: rgba(82, 82, 82, 1);
+  --color-gray-70: rgba(64, 64, 64, 1);
+  --color-gray-70-3: rgba(64, 64, 64, 0.3);
+  --color-gray-80: rgba(38, 38, 38, 1);
+  --color-gray-90: rgba(23, 23, 23, 1);
+
+  // Football colors
+  --color-grass-green: rgba(44, 140, 0, 1);
+  --color-grass-green-dark: rgba(33, 105, 0, 1);
+  --color-ball-white: rgba(255, 255, 255, 1);
+  --color-ball-black: rgba(0, 0, 0, 1);
+  --color-referee-yellow: rgba(255, 255, 0, 1);
+  --color-referee-red: rgba(255, 0, 0, 1);
+}
+
+// Colors
+$solarized-base03: #002b36;
+$solarized-base02: #073642;
+$solarized-base01: #586e75;
+$solarized-base00: #657b83;
+$solarized-base0: #839496;
+$solarized-base1: #93a1a1;
+$solarized-base2: #eee8d5;
+$solarized-base3: #fdf6e3;
+$solarized-yellow: #b58900;
+$solarized-orange: #cb4b16;
+$solarized-red: #dc322f;
+$solarized-magenta: #d33682;
+$solarized-violet: #6c71c4;
+$solarized-blue: #268bd2;
+$solarized-cyan: #2aa198;
+$solarized-green: #859900;
+
+// Dusk theme colors
+$dusk-deep: #2a2d3e;
+$dusk-base: #323649;
+$dusk-subtle: #3f435a;
+$dusk-muted: #565b7a;
+$dusk-accent: #7a819c;
+$dusk-text: #d5d9e2;
+$dusk-highlight: #b4c4e7;
+$dusk-focus: #8594c4;
+
+// Ocean theme colors
+$ocean-deep: #0f1c2d;
+$ocean-base: #1b2b3d;
+$ocean-subtle: #2c3e50;
+$ocean-muted: #34495e;
+$ocean-accent: #3498db;
+$ocean-text: #ecf0f1;
+$ocean-highlight: #79c5ff;
+$ocean-focus: #5dade2;
+
+// Sepia theme colors
+$sepia-base: #f4ecd8;
+$sepia-dark: #e4d5b7;
+$sepia-darker: #d4c5a7;
+$sepia-text: #433422;
+$sepia-muted: #7d6b56;
+$sepia-accent: #8b6b4a;
+$sepia-highlight: #6b4423;
+$sepia-focus: #8b4513;
+
+// Nord theme colors
+$nord-0: #2e3440;
+$nord-1: #3b4252;
+$nord-2: #434c5e;
+$nord-3: #4c566a;
+$nord-4: #d8dee9;
+$nord-5: #e5e9f0;
+$nord-6: #eceff4;
+$nord-7: #8fbcbb;
+$nord-8: #88c0d0;
+$nord-9: #81a1c1;
+$nord-10: #5e81ac;
+
+// Theme definitions
+body.theme-light {
+  --theme-overlay: var(--color-black-100-4);
+  --theme-background: var(--color-white);
+  --theme-background-modal: var(--color-gray-20);
+  --theme-background-modal-footer: var(--color-gray-40);
+  --theme-background-input: var(--color-gray-10);
+  --theme-border: var(--color-gray-20);
+  --theme-border-subdued: var(--color-gray-40-2);
+  --theme-text: var(--color-black-100);
+  --theme-button: var(--color-black-100);
+  --theme-button-text: var(--color-white);
+  --theme-button-foreground: var(--color-gray-30);
+  --theme-button-background: var(--color-gray-20);
+  --theme-focused-foreground: var(--color-grass-green);
+  --theme-focused-foreground-subdued: rgba(44, 140, 0, 0.5);
+}
+
+body.theme-dark {
+  --theme-overlay: var(--color-black-100-4);
+  --theme-background: var(--color-black-100);
+  --theme-background-modal: var(--color-gray-80);
+  --theme-background-modal-footer: var(--color-gray-70);
+  --theme-background-input: var(--color-gray-60);
+  --theme-border: var(--color-gray-80);
+  --theme-border-subdued: var(--color-gray-70-3);
+  --theme-text: var(--color-white);
+  --theme-button: var(--color-white);
+  --theme-button-text: var(--color-black-100);
+  --theme-button-foreground: var(--color-gray-90);
+  --theme-button-background: var(--color-gray-80);
+  --theme-focused-foreground: var(--color-grass-green);
+  --theme-focused-foreground-subdued: rgba(44, 140, 0, 0.5);
+}
+
+body.theme-grass {
+  --theme-overlay: var(--color-black-100-4);
+  --theme-background: var(--color-grass-green);
+  --theme-background-modal: var(--color-grass-green-dark);
+  --theme-background-modal-footer: var(--color-grass-green-dark);
+  --theme-background-input: var(--color-grass-green-dark);
+  --theme-border: var(--color-grass-green-dark);
+  --theme-border-subdued: rgba(33, 105, 0, 0.3);
+  --theme-text: var(--color-white);
+  --theme-button: var(--color-white);
+  --theme-button-text: var(--color-grass-green);
+  --theme-button-foreground: var(--color-grass-green-dark);
+  --theme-button-background: var(--color-grass-green-dark);
+  --theme-focused-foreground: var(--color-ball-white);
+  --theme-focused-foreground-subdued: rgba(255, 255, 255, 0.5);
+}
+
+body.theme-solarized {
+  --theme-overlay: #{rgba($solarized-base03, 0.4)};
+  --theme-background: #{$solarized-base03};
+  --theme-background-modal: #{$solarized-base02};
+  --theme-background-modal-footer: #{$solarized-base02};
+  --theme-background-input: #{$solarized-base02};
+  --theme-border: #{$solarized-base01};
+  --theme-border-subdued: #{rgba($solarized-base01, 0.3)};
+  --theme-text: #{$solarized-base0};
+  --theme-button: #{$solarized-base1};
+  --theme-button-text: #{$solarized-base03};
+  --theme-button-foreground: #{$solarized-base01};
+  --theme-button-background: #{$solarized-base02};
+  --theme-focused-foreground: #{$solarized-blue};
+  --theme-focused-foreground-subdued: #{rgba($solarized-blue, 0.5)};
+}
+
+body.theme-dusk {
+  --theme-overlay: #{rgba($dusk-deep, 0.4)};
+  --theme-background: #{$dusk-deep};
+  --theme-background-modal: #{$dusk-base};
+  --theme-background-modal-footer: #{$dusk-subtle};
+  --theme-background-input: #{$dusk-base};
+  --theme-border: #{$dusk-subtle};
+  --theme-border-subdued: #{rgba($dusk-muted, 0.3)};
+  --theme-text: #{$dusk-text};
+  --theme-button: #{$dusk-highlight};
+  --theme-button-text: #{$dusk-deep};
+  --theme-button-foreground: #{$dusk-muted};
+  --theme-button-background: #{$dusk-subtle};
+  --theme-focused-foreground: #{$dusk-focus};
+  --theme-focused-foreground-subdued: #{rgba($dusk-focus, 0.5)};
+}
+
+body.theme-ocean {
+  --theme-overlay: #{rgba($ocean-deep, 0.4)};
+  --theme-background: #{$ocean-deep};
+  --theme-background-modal: #{$ocean-base};
+  --theme-background-modal-footer: #{$ocean-subtle};
+  --theme-background-input: #{$ocean-base};
+  --theme-border: #{$ocean-subtle};
+  --theme-border-subdued: #{rgba($ocean-muted, 0.3)};
+  --theme-text: #{$ocean-text};
+  --theme-button: #{$ocean-highlight};
+  --theme-button-text: #{$ocean-deep};
+  --theme-button-foreground: #{$ocean-muted};
+  --theme-button-background: #{$ocean-subtle};
+  --theme-focused-foreground: #{$ocean-accent};
+  --theme-focused-foreground-subdued: #{rgba($ocean-accent, 0.5)};
+}
+
+body.theme-sepia {
+  --theme-overlay: #{rgba($sepia-darker, 0.4)};
+  --theme-background: #{$sepia-base};
+  --theme-background-modal: #{$sepia-dark};
+  --theme-background-modal-footer: #{$sepia-darker};
+  --theme-background-input: #{$sepia-dark};
+  --theme-border: #{$sepia-darker};
+  --theme-border-subdued: #{rgba($sepia-muted, 0.3)};
+  --theme-text: #{$sepia-text};
+  --theme-button: #{$sepia-highlight};
+  --theme-button-text: #{$sepia-base};
+  --theme-button-foreground: #{$sepia-muted};
+  --theme-button-background: #{$sepia-accent};
+  --theme-focused-foreground: #{$sepia-focus};
+  --theme-focused-foreground-subdued: #{rgba($sepia-focus, 0.5)};
+}
+
+body.theme-nord {
+  --theme-overlay: #{rgba($nord-0, 0.4)};
+  --theme-background: #{$nord-0};
+  --theme-background-modal: #{$nord-1};
+  --theme-background-modal-footer: #{$nord-2};
+  --theme-background-input: #{$nord-1};
+  --theme-border: #{$nord-2};
+  --theme-border-subdued: #{rgba($nord-3, 0.3)};
+  --theme-text: #{$nord-4};
+  --theme-button: #{$nord-8};
+  --theme-button-text: #{$nord-0};
+  --theme-button-foreground: #{$nord-3};
+  --theme-button-background: #{$nord-2};
+  --theme-focused-foreground: #{$nord-9};
+  --theme-focused-foreground-subdued: #{rgba($nord-9, 0.5)};
+}
+
+// Font definitions
+body.font-use-geist-mono {
+  --font-family-mono: 'GeistMono-Regular', Consolas, monaco, monospace;
+}
+
+body.font-use-fira-code {
+  --font-family-mono: 'FiraCode-Regular', sans-serif;
+}
+
+// Base styles
+:root {
+  --font-family: -apple-system, BlinkMacSystemFont, helvetica neue, helvetica, sans-serif;
+  --font-family-mono: 'GeistMono-Regular', Consolas, monaco, monospace;
+  --font-size: 16px;
+  --theme-line-height-base: 1.25;
+
+  --z-index-page: 1;
+  --z-index-page-select: 3;
+  --z-index-page-tooltips: 4;
+  --z-index-page-popover: 5;
+  --z-index-page-dropdown-menus: 6;
+  --z-index-page-modals: 10;
+} 

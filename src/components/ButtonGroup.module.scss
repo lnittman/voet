@@ -1,0 +1,20 @@
+.root {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.full {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  white-space: nowrap;
+}
+
+.full > * > * {
+  width: 100%;
+}
+
+// Add focus styles for keyboard navigation
+.root :global([data-focused="true"]) {
+  outline: 2px solid var(--theme-focused-foreground);
+  outline-offset: 2px;
+}

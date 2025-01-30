@@ -1,0 +1,138 @@
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.5rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  font-family: var(--font-family-mono);
+}
+
+.treeViewItem {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.continentSection {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.continentHeader,
+.countryHeader {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  line-height: 1.5;
+  height: 1.5rem;
+
+  &:hover {
+    background: var(--theme-background-input);
+  }
+}
+
+.arrow {
+  font-size: 1rem;
+  margin-right: 0.25rem;
+  color: var(--theme-text);
+  opacity: 0.7;
+  line-height: 1.5;
+}
+
+.continentName {
+  color: var(--theme-text);
+  text-transform: capitalize;
+  line-height: 1.5;
+}
+
+.countryList {
+  margin-left: 1.25rem;
+  margin-top: 0;
+}
+
+.countrySection {
+  margin: 0;
+  padding: 0;
+}
+
+.countryName {
+  color: var(--theme-text);
+  text-transform: capitalize;
+  line-height: 1.5;
+}
+
+.leagueList {
+  margin-left: 1.25rem;
+  margin-top: 0;
+}
+
+.leagueItem {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: var(--theme-text);
+  height: 1.5rem;
+  line-height: 1.5;
+
+  &:hover {
+    background: var(--theme-background-input);
+  }
+
+  &:focus {
+    outline: none;
+    background: var(--theme-background-input);
+    box-shadow: 0 0 0 2px var(--theme-focused-foreground);
+  }
+}
+
+.leagueName {
+  flex: 1;
+  text-transform: capitalize;
+  line-height: 1.5;
+}
+
+.leagueTier {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-left: 0.25rem;
+  line-height: 1.5;
+}
+
+.empty {
+  opacity: 0.5;
+}
+
+.countrySelector {
+  margin-bottom: 2rem;
+}
+
+.leagues {
+  margin-top: 1rem;
+}
+
+.leagueInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.leagueMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.noResults {
+  padding: 2rem;
+  text-align: center;
+  color: var(--theme-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+} 
