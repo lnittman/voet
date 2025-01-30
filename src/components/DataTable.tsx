@@ -33,9 +33,9 @@ const DataTable: React.FC<TableProps> = ({ data }) => {
   const prevDataRef = React.useRef<string[][]>(data);
 
   React.useEffect(() => {
-    const rows = tableRef.current?.querySelectorAll<HTMLTableRowElement>('tr') || [];
+    const rows = tableRef.current?.querySelectorAll('tr') || [];
     for (let i = 1; i < data.length; i++) {
-      const cells = rows[i]?.querySelectorAll<HTMLTableCellElement>('td');
+      const cells = Array.from(rows[i]?.querySelectorAll('td') || []);
       if (!cells) continue;
       for (let j = 0; j < data[i].length; j++) {
         const cell = cells[j];

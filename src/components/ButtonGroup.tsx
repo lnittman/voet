@@ -56,7 +56,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ items, isFull }) => {
         
         if (each.items) {
           return (
-            <DropdownMenuTrigger key={each.body} items={each.items} hotkey={each.openHotkey}>
+            <DropdownMenuTrigger key={`dropdown-${index}`} items={each.items} hotkey={each.openHotkey}>
               <ActionButton hotkey={shortcut} isSelected={each.selected}>
                 {each.body}
               </ActionButton>
@@ -66,7 +66,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ items, isFull }) => {
 
         return (
           <ActionButton 
-            key={each.body} 
+            key={`button-${index}`}
             onClick={each.onClick} 
             hotkey={shortcut}
             isSelected={each.selected}
