@@ -10,39 +10,31 @@ import TableColumn from '@components/TableColumn';
 import Card from '@components/Card';
 import ActionListItem from '@components/ActionListItem';
 import Row from '@components/Row';
-import { BUNDESLIGA_STANDINGS, LA_LIGA_STANDINGS, PREMIER_LEAGUE_STANDINGS, SERIE_A_STANDINGS, type LeagueStandings } from '../../../constants/standings';
 
-const getLeagueData = (leagueId: string): LeagueStandings | null => {
-  switch (leagueId) {
-    case 'premier-league':
-      return PREMIER_LEAGUE_STANDINGS;
-    case 'bundesliga':
-      return BUNDESLIGA_STANDINGS;
-    case 'serie-a':
-      return SERIE_A_STANDINGS;
-    case 'la-liga':
-      return LA_LIGA_STANDINGS;
-    default:
-      return null;
-  }
-};
-
-const formatStandingsData = (standings: LeagueStandings): string[][] => {
-  const headers = ['Pos', 'Team', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'];
-  const rows = standings.standings.map(team => [
-    team.position.toString(),
-    team.team,
-    team.played.toString(),
-    team.won.toString(),
-    team.drawn.toString(),
-    team.lost.toString(),
-    team.goalsFor.toString(),
-    team.goalsAgainst.toString(),
-    (team.goalDifference >= 0 ? '+' : '') + team.goalDifference.toString(),
-    team.points.toString()
-  ]);
-  return [headers, ...rows];
-};
+// Example data - in a real app this would come from an API
+const EXAMPLE_LEAGUE_TABLE = [
+  ['Pos', 'Club', 'MP', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'],
+  ['1', 'Arsenal', '32', '23', '5', '4', '77', '26', '+51', '74'],
+  ['2', 'Manchester City', '31', '22', '4', '5', '78', '29', '+49', '70'],
+  ['3', 'Liverpool', '32', '21', '7', '4', '72', '31', '+41', '70'],
+  ['4', 'Aston Villa', '33', '19', '5', '9', '66', '46', '+20', '62'],
+  ['5', 'Tottenham', '32', '18', '5', '9', '65', '49', '+16', '59'],
+  ['6', 'Manchester Utd', '32', '16', '5', '11', '48', '43', '+5', '53'],
+  ['7', 'Newcastle', '32', '15', '7', '10', '69', '48', '+21', '52'],
+  ['8', 'West Ham', '33', '13', '8', '12', '51', '58', '-7', '47'],
+  ['9', 'Chelsea', '32', '12', '9', '11', '53', '52', '+1', '45'],
+  ['10', 'Brighton', '31', '12', '9', '10', '52', '47', '+5', '45'],
+  ['11', 'Wolves', '33', '12', '6', '15', '46', '54', '-8', '42'],
+  ['12', 'Fulham', '33', '11', '5', '17', '45', '55', '-10', '38'],
+  ['13', 'Crystal Palace', '33', '9', '9', '15', '37', '54', '-17', '36'],
+  ['14', 'Bournemouth', '32', '8', '8', '16', '41', '64', '-23', '32'],
+  ['15', 'Brentford', '33', '8', '8', '17', '45', '59', '-14', '32'],
+  ['16', 'Everton', '32', '8', '7', '17', '32', '48', '-16', '27'],
+  ['17', 'Nottm Forest', '33', '7', '9', '17', '38', '58', '-20', '26'],
+  ['18', 'Luton', '32', '6', '7', '19', '41', '68', '-27', '25'],
+  ['19', 'Burnley', '33', '4', '7', '22', '31', '71', '-40', '19'],
+  ['20', 'Sheffield Utd', '32', '3', '6', '23', '27', '82', '-55', '15']
+];
 
 const EXAMPLE_MATCHES = [
   // Week 30
@@ -185,9 +177,6 @@ export default function LeaguePage() {
   const [activeTab, setActiveTab] = React.useState<Tab>('table');
   const [selectedWeek, setSelectedWeek] = React.useState(33);
 
-  const leagueData = getLeagueData(params.league);
-  const tableData = leagueData ? formatStandingsData(leagueData) : [];
-
   const navigationItems = [
     { body: 'table', onClick: () => setActiveTab('table'), selected: activeTab === 'table' },
     { body: 'matches', onClick: () => setActiveTab('matches'), selected: activeTab === 'matches' },
@@ -199,7 +188,7 @@ export default function LeaguePage() {
       case 'table':
         return (
           <div className={styles.tableContainer}>
-            <DataTable data={tableData} />
+            <DataTable data={EXAMPLE_LEAGUE_TABLE} />
           </div>
         );
       case 'matches':
@@ -220,13 +209,37 @@ export default function LeaguePage() {
                 next
               </ActionListItem>
             </Row>
-            <div className={styles.centered}>Matches coming soon...</div>
+            <Table>
+              {EXAMPLE_MATCHES.map((match, index) => (
+                <tr key={index} className={styles.matchRow}>
+                  <TableColumn className={styles.matchDate}>{match.date}</TableColumn>
+                  <TableColumn className={styles.homeTeam}>{match.home}</TableColumn>
+                  <TableColumn className={styles.score}>{match.score}</TableColumn>
+                  <TableColumn className={styles.awayTeam}>{match.away}</TableColumn>
+                </tr>
+              ))}
+            </Table>
           </div>
         );
       case 'news':
         return (
           <div className={styles.newsContainer}>
-            <div className={styles.centered}>News coming soon...</div>
+            {EXAMPLE_NEWS.map(article => (
+              <ActionListItem
+                key={article.id}
+                icon="⊹"
+                className={styles.newsItem}
+              >
+                <div className={styles.newsContent}>
+                  <Row className={styles.newsHeader}>
+                    <span className={styles.newsTitle}>{article.title}</span>
+                    <span className={styles.newsCategory}>{article.category}</span>
+                  </Row>
+                  <p className={styles.newsSummary}>{article.summary}</p>
+                  <span className={styles.newsDate}>{article.date}</span>
+                </div>
+              </ActionListItem>
+            ))}
           </div>
         );
     }
@@ -235,9 +248,16 @@ export default function LeaguePage() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>
-        {leagueData?.name || 'League'} <span className={styles.country}>({leagueData?.country || params.country})</span>
+        {decodeURIComponent(String(params.league)).replace(/-/g, ' ')}
       </h1>
-      <ButtonGroup items={navigationItems} />
+      <div className={styles.countryInfo}>
+        {decodeURIComponent(String(params.country)).replace(/-/g, ' ')}
+      </div>
+      
+      <div className={styles.navigation}>
+        <ButtonGroup items={navigationItems} />
+      </div>
+
       <div className={styles.content}>
         {renderContent()}
       </div>
