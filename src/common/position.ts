@@ -4,13 +4,12 @@ export function calculate(triggerElement: HTMLElement, popoverElement: HTMLEleme
   let triggerRect;
   let popoverRect;
 
-  if (triggerElement) {
-    triggerRect = triggerElement.getBoundingClientRect();
+  if (!triggerElement || !popoverElement) {
+    return { placement: 'bottom', position: { top: 0, left: 0 } };
   }
 
-  if (popoverElement) {
-    popoverRect = popoverElement.getBoundingClientRect();
-  }
+  triggerRect = triggerElement.getBoundingClientRect();
+  popoverRect = popoverElement.getBoundingClientRect();
 
   const spaceAbove = triggerRect.top;
   const spaceBelow = window.innerHeight - triggerRect.bottom;
@@ -23,9 +22,6 @@ export function calculate(triggerElement: HTMLElement, popoverElement: HTMLEleme
   let placement: Placement = 'bottom';
   let top = 0;
   let left = 0;
-  if (!popoverRect) {
-    return { placement, position: { top: 0, left: 0 } };
-  }
 
   if (spaceAbove >= viewportHeightThreshold && spaceAbove >= popoverRect.height) {
     placement = 'top';
