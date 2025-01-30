@@ -96,19 +96,17 @@ const DropdownMenu = React.forwardRef<HTMLDivElement, DropdownMenuProps>((props,
           );
         })}
 
-      {level === 0 && (
-        <footer className={styles.footer}>
-          Press space to{' '}
-          <ActionButton
-            hotkey="␣"
-            onClick={() => {
-              if (onClose) onClose();
-            }}
-          >
-            Close
-          </ActionButton>
-        </footer>
-      )}
+      <footer className={styles.footer}>
+        Press space to{' '}
+        <ActionButton
+          hotkey="␣"
+          onClick={() => {
+            if (onClose) onClose();
+          }}
+        >
+          Close
+        </ActionButton>
+      </footer>
     </div>
   );
 });

@@ -18,13 +18,13 @@ const FAVICON_IMAGES = [
 const APP_ICON = '⚽';
 
 export const metadata: Metadata = {
-  title: 'Voet',
-  description: 'A modern football data platform',
+  title: 'voet',
+  description: 'a modern football data platform',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Voet',
+    title: 'voet',
   },
   icons: {
     icon: [

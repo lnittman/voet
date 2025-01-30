@@ -21,6 +21,10 @@ const DynamicFavicon: React.FC<DynamicFaviconProps> = ({ images }) => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Set canvas size
+    canvas.width = FAVICON_SIZE;
+    canvas.height = FAVICON_SIZE;
+
     // Clear canvas
     ctx.clearRect(0, 0, FAVICON_SIZE, FAVICON_SIZE);
 
@@ -35,43 +39,53 @@ const DynamicFavicon: React.FC<DynamicFaviconProps> = ({ images }) => {
         img.src = imageSrc;
       });
 
-      // Calculate square crop dimensions
-      const size = Math.min(img.width, img.height);
-      const x = (img.width - size) / 2;
-      const y = (img.height - size) / 2;
+      // Calculate aspect ratio preserving dimensions
+      const scale = Math.min(FAVICON_SIZE / img.width, FAVICON_SIZE / img.height);
+      const scaledWidth = Math.round(img.width * scale);
+      const scaledHeight = Math.round(img.height * scale);
+      const x = (FAVICON_SIZE - scaledWidth) / 2;
+      const y = (FAVICON_SIZE - scaledHeight) / 2;
 
-      // Draw cropped image
-      ctx.drawImage(
-        img,
-        x, y, size, size, // Source crop
-        0, 0, FAVICON_SIZE, FAVICON_SIZE // Destination size
-      );
+      // Draw scaled image centered
+      ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
 
-      // Apply pixelation effect
+      // Get image data for pixelation
       const imageData = ctx.getImageData(0, 0, FAVICON_SIZE, FAVICON_SIZE);
+      const data = imageData.data;
+
+      // Clear canvas for pixelation
       ctx.clearRect(0, 0, FAVICON_SIZE, FAVICON_SIZE);
 
+      // Apply pixelation effect
       for (let y = 0; y < FAVICON_SIZE; y += PIXEL_SIZE) {
         for (let x = 0; x < FAVICON_SIZE; x += PIXEL_SIZE) {
-          // Get the color of the first pixel in the block
           const i = (y * FAVICON_SIZE + x) * 4;
-          const r = imageData.data[i];
-          const g = imageData.data[i + 1];
-          const b = imageData.data[i + 2];
-          const a = imageData.data[i + 3];
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const a = data[i + 3];
 
-          // Fill the entire block with this color
-          ctx.fillStyle = `rgba(${r},${g},${b},${a / 255})`;
-          ctx.fillRect(x, y, PIXEL_SIZE, PIXEL_SIZE);
+          if (a > 0) { // Only draw non-transparent pixels
+            ctx.fillStyle = `rgba(${r},${g},${b},${a / 255})`;
+            ctx.fillRect(
+              Math.round(x), 
+              Math.round(y), 
+              PIXEL_SIZE, 
+              PIXEL_SIZE
+            );
+          }
         }
       }
 
       // Update favicon
-      const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+      const existingLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+      const link = existingLink || document.createElement('link');
       link.type = 'image/x-icon';
       link.rel = 'shortcut icon';
       link.href = canvas.toDataURL();
-      document.head.appendChild(link);
+      if (!existingLink) {
+        document.head.appendChild(link);
+      }
     } catch (error) {
       console.error('Error updating favicon:', error);
     }
